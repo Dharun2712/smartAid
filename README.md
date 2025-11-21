@@ -1065,9 +1065,17 @@ copies or substantial portions of the Software.
 
 ## 👨‍💻 Authors & Team
 
-**Project Lead**: Dharun  
-**GitHub**: [@Dharun2712](https://github.com/Dharun2712)  
-**Repository**: [smartAid](https://github.com/Dharun2712/smartAid)
+### 👥 Team Members
+- **Dharun** — [@Dharun2712](https://github.com/Dharun2712)
+- **Arun Sanjeev** — [@arunsanjeevms](https://github.com/arunsanjeevms)
+- **Aswanth** — [@aswanth-ks](https://github.com/aswanth-ks)
+- **Kishore** — [@kishoreSpandiyan](https://github.com/kishoreSpandiyan)
+
+---
+
+### 📌 Repository  
+👉 **smartAid**: https://github.com/Dharun2712/smartAid
+
 
 ### Acknowledgments
 
@@ -1124,3 +1132,4 @@ If you find Smart-Aid helpful, please consider giving it a star! ⭐
 [⬆ Back to Top](#-smart-aid-ai-powered-emergency-ambulance-response-system)
 
 </div>
+
