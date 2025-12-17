@@ -2,15 +2,16 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![Flutter](https://img.shields.io/badge/Flutter-3.9.2-02569B?logo=flutter)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688?logo=fastapi)
-![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=220&section=header&text=Smart-Aid&fontSize=48&fontAlignY=35&desc=AI-Powered%20Emergency%20Ambulance%20Response%20System&descAlignY=55&animation=fadeIn"/>
 
-**Revolutionizing Emergency Medical Services with AI-Powered Dispatch, Real-Time Tracking, and Intelligent Resource Management**
+<img src="https://readme-typing-svg.herokuapp.com?font=Poppins&size=24&pause=1000&color=FF3B3B&center=true&vCenter=true&width=900&lines=Saving+Lives+with+AI+%26+Real-Time+Technology;Instant+SOS+%7C+Smart+Dispatch+%7C+Live+Tracking;Flutter+%2B+FastAPI+%2B+MongoDB+Atlas;Built+for+Hackathons+%26+Real-World+Impact"/>
 
-[Features](#-key-features) • [Architecture](#-system-architecture) • [Installation](#-installation) • [Demo](#-demo) • [Documentation](#-documentation)
+<br/>
+
+<img src="https://img.shields.io/github/stars/Dharun2712/smartAid?style=for-the-badge&color=yellow"/>
+<img src="https://img.shields.io/github/forks/Dharun2712/smartAid?style=for-the-badge&color=orange"/>
+<img src="https://img.shields.io/github/issues/Dharun2712/smartAid?style=for-the-badge&color=red"/>
+<img src="https://img.shields.io/github/license/Dharun2712/smartAid?style=for-the-badge&color=green"/>
 
 </div>
 
@@ -1132,4 +1133,5 @@ If you find Smart-Aid helpful, please consider giving it a star! ⭐
 [⬆ Back to Top](#-smart-aid-ai-powered-emergency-ambulance-response-system)
 
 </div>
+
 
