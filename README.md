@@ -12,7 +12,7 @@
 <img src="https://img.shields.io/github/forks/Dharun2712/smartAid?style=for-the-badge&color=orange"/>
 <img src="https://img.shields.io/github/issues/Dharun2712/smartAid?style=for-the-badge&color=red"/>
 <img src="https://img.shields.io/github/license/Dharun2712/smartAid?style=for-the-badge&color=green"/>
-
+<div>
 
 ---
 
@@ -1132,6 +1132,7 @@ If you find Smart-Aid helpful, please consider giving it a star! ⭐
 [⬆ Back to Top](#-smart-aid-ai-powered-emergency-ambulance-response-system)
 
 </div>
+
 
 
 
