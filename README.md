@@ -14,6 +14,7 @@
 <img src="https://img.shields.io/github/license/Dharun2712/smartAid?style=for-the-badge&color=green"/>
 
 </div>
+<div align="center"> ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg) ![Flutter](https://img.shields.io/badge/Flutter-3.9.2-02569B?logo=flutter) ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688?logo=fastapi) ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb) ![License](https://img.shields.io/badge/license-MIT-green.svg) **Revolutionizing Emergency Medical Services with AI-Powered Dispatch, Real-Time Tracking, and Intelligent Resource Management** [Features](#-key-features) • [Architecture](#-system-architecture) • [Installation](#-installation) • [Demo](#-demo) • [Documentation](#-documentation) </div>
 
 ---
 
