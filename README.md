@@ -1,18 +1,24 @@
 # 🚑 Smart-Aid: AI-Powered Emergency Ambulance Response System
 
-<div align="center">
+<h1 align="center">
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![Flutter](https://img.shields.io/badge/Flutter-3.9.2-02569B?logo=flutter)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688?logo=fastapi)
-![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&size=38&duration=3000&pause=800&color=FF3B3B&center=true&vCenter=true&width=900&lines=🚑+Smart-Aid;AI-Powered+Emergency+Ambulance+Response+System;Saving+Lives+with+Intelligence" />
 
-**Revolutionizing Emergency Medical Services with AI-Powered Dispatch, Real-Time Tracking, and Intelligent Resource Management**
+</h1>
 
-[Features](#-key-features) • [Architecture](#-system-architecture) • [Installation](#-installation) • [Demo](#-demo) • [Documentation](#-documentation)
+<h3 align="center">
 
-</div>
+<img src="https://img.shields.io/badge/AI-Driven%20Emergency%20Dispatch-ff3b3b?style=for-the-badge&logo=googleassistant&logoColor=white"/>
+<img src="https://img.shields.io/badge/Real--Time-Ambulance%20Tracking-ff6b6b?style=for-the-badge&logo=googlemaps&logoColor=white"/>
+<img src="https://img.shields.io/badge/Smart-Hospital%20Integration-ff8787?style=for-the-badge&logo=hospital&logoColor=white"/>
+
+</h3>
+
+<p align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=ff3b3b&height=120&section=header&text=Smart-Aid&fontSize=40&fontColor=ffffff&animation=fadeIn" />
+
+</p>
 
 ---
 
