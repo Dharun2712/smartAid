@@ -12,6 +12,9 @@ echo ============================================
 REM Force Python produce UTF-8 output on Windows consoles
 set "PYTHONUTF8=1"
 
+REM Groq API key for AI Accident Image Analysis (set your own key here)
+REM set "GROQ_API_KEY=your_groq_api_key_here"
+
 REM Ensure PYTHONPATH includes current dir so imports work when invoked from elsewhere
 set "PYTHONPATH=%CD%"
 
@@ -55,6 +58,14 @@ if exist "requirements.txt" (
     )
 ) else (
     echo [WARNING] requirements.txt not found. Skipping pip install.
+)
+
+if exist "requirements_fastapi.txt" (
+    echo [INFO] Installing/Updating FastAPI requirements...
+    pip install -r requirements_fastapi.txt
+    if errorlevel 1 (
+        echo [WARNING] Pip install returned non-zero exit code. Continuing anyway.
+    )
 )
 
 REM Ensure FastAPI and Uvicorn are installed

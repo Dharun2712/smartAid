@@ -132,6 +132,14 @@ try:
 except Exception as e:
     logger.warning(f"⚠️  Risk Prediction API not loaded: {e}")
 
+# Import and include Accident Image Analysis Router
+try:
+    from image_analysis_api import image_analysis_router
+    app.include_router(image_analysis_router)
+    logger.info("✅ Accident Image Analysis API loaded successfully")
+except Exception as e:
+    logger.warning(f"⚠️  Accident Image Analysis API not loaded: {e}")
+
 # Request Logging Middleware
 @app.middleware("http")
 async def log_requests(request: Request, call_next):

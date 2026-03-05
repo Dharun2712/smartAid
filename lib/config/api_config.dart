@@ -32,7 +32,7 @@ class ApiConfig {
     // For Android emulator: use 10.0.2.2 (special IP that maps to host's localhost)
     // For physical devices: use host machine's LAN IP
     // For production release: use deployed server IP
-    final String url = "http://10.216.65.206:8000"; // <-- Backend server IP (Local)
+    final String url = "http://20.47.72.43:8000"; // <-- Backend server IP (Local)
     return url;
   }
 
@@ -46,6 +46,9 @@ class ApiConfig {
   // ESP32 Accident Detection Endpoints
   static String get accident => "$baseUrl/api/accident";
   static String get accidents => "$baseUrl/api/accidents";
+  
+  // AI Image Analysis Endpoint
+  static String get accidentImageAnalyze => "$baseUrl/api/accident-image/analyze";
   
   // Timeout configuration
   static const Duration requestTimeout = Duration(seconds: 15);

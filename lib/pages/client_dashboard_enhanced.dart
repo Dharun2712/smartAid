@@ -13,6 +13,7 @@ import 'sos_confirmation_modal.dart';
 import '../config/api_config.dart';
 import 'sos_active_screen.dart';
 import 'user_profile_page.dart';
+import 'accident_image_analysis_page.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -960,6 +961,29 @@ class _ClientDashboardEnhancedState extends State<ClientDashboardEnhanced> {
                 ],
               ),
             ), */
+
+          // AI Accident Image Analysis Button
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const AccidentImageAnalysisPage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.camera_alt, size: 22),
+            label: const Text('AI IMAGE ANALYSIS'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepPurple,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -28,6 +28,7 @@ dependencies:
   audioplayers: ^5.2.1
   vibration: ^2.0.0
   flutter_polyline_points: ^2.0.0
+  image_picker: ^1.0.7
   # speech_to_text: ^6.1.1  # Temporarily disabled due to build issues
 
 dev_dependencies:
