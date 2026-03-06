@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../services/voice_emergency_service.dart';
 
@@ -74,7 +75,10 @@ class _VoiceEmergencyWidgetState extends State<VoiceEmergencyWidget>
   @override
   void dispose() {
     _pulseController.dispose();
-    _voiceService.stopListening();
+    _voiceService.onStatusChanged = null;
+    _voiceService.onTranscription = null;
+    _voiceService.onEmergencyDetected = null;
+    unawaited(_voiceService.stopListening());
     super.dispose();
   }
 

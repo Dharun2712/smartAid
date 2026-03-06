@@ -105,17 +105,23 @@ class _EmergencyVoiceActivationPageState
   }
 
   Future<void> _startVoiceRecognition() async {
+    bool success;
     if (_voiceActive) {
-      await _nativeService.stopVoiceRecognition();
+      success = await _nativeService.stopVoiceRecognition();
     } else {
-      await _nativeService.startVoiceRecognition();
+      success = await _nativeService.startVoiceRecognition();
     }
-    setState(() => _voiceActive = !_voiceActive);
+    if (!mounted) return;
+    if (success) {
+      setState(() => _voiceActive = !_voiceActive);
+    } else {
+      await _refreshState();
+    }
   }
 
   Future<void> _longPressSOS() async {
     await _nativeService.activateLongPressSOS();
-    setState(() => _voiceActive = true);
+    await _refreshState();
   }
 
   void _showOverlayInstructions() {

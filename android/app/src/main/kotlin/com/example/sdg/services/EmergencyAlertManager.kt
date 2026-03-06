@@ -23,7 +23,11 @@ import java.net.URL
 object EmergencyAlertManager {
 
     private const val TAG = "EmergencyAlertManager"
-    private const val BACKEND_URL = "http://20.47.72.43:8000"
+    private const val BACKEND_URL = "https://20.47.72.43:8000"
+
+    // Auth token provided from Flutter via MethodChannel
+    @Volatile
+    var authToken: String? = null
 
     // Emergency keywords that trigger SOS
     private val emergencyKeywords = listOf(
@@ -107,11 +111,7 @@ object EmergencyAlertManager {
         keyword: String
     ): Boolean = withContext(Dispatchers.IO) {
         try {
-            // Get auth token from Flutter secure storage
-            val prefs = context.getSharedPreferences("FlutterSecureStorage", Context.MODE_PRIVATE)
-            val token = prefs.getString("auth_token", null)
-                ?: context.getSharedPreferences("flutter_secure_storage", Context.MODE_PRIVATE)
-                    .getString("auth_token", null)
+            val token = authToken
 
             val url = URL("$BACKEND_URL/api/client/sos")
             val conn = url.openConnection() as HttpURLConnection

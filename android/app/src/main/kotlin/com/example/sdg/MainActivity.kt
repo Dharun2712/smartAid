@@ -78,6 +78,12 @@ class MainActivity : FlutterActivity() {
                 "activateLongPressSOS" -> {
                     activateLongPressSOS(result)
                 }
+                "setAuthToken" -> {
+                    val token = call.arguments as? String
+                    com.example.sdg.services.EmergencyAlertManager.authToken =
+                        if (!token.isNullOrBlank()) token else null
+                    result.success(true)
+                }
                 else -> {
                     result.notImplemented()
                 }
@@ -113,7 +119,8 @@ class MainActivity : FlutterActivity() {
             perms["notifications"] = true
         }
 
-        perms["all_granted"] = perms.values.all { it }
+        val runtimePermissionKeys = listOf("microphone", "fine_location", "coarse_location", "notifications")
+        perms["all_granted"] = runtimePermissionKeys.all { key -> perms[key] == true }
         return perms
     }
 
