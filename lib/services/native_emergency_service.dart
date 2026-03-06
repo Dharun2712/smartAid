@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 import '../utils/logger.dart';
+import 'auth_service.dart';
 
 /// Flutter bridge to native Android emergency voice activation system.
 ///
@@ -94,10 +95,21 @@ class NativeEmergencyService {
 
   // === Floating SOS Button ===
 
+  /// Get current auth token to pass to native side
+  Future<String?> _getAuthToken() async {
+    try {
+      return await AuthService().getToken();
+    } catch (e) {
+      Log.e('[NativeEmergency] Failed to get auth token: $e');
+      return null;
+    }
+  }
+
   /// Start the floating SOS overlay button
   Future<bool> startFloatingButton() async {
     try {
-      return await _channel.invokeMethod('startFloatingButton') as bool;
+      final token = await _getAuthToken();
+      return await _channel.invokeMethod('startFloatingButton', {'authToken': token}) as bool;
     } catch (e) {
       Log.e('[NativeEmergency] startFloatingButton error: $e');
       return false;
@@ -128,7 +140,8 @@ class NativeEmergencyService {
   /// Start the native foreground voice recognition service
   Future<bool> startVoiceRecognition() async {
     try {
-      return await _channel.invokeMethod('startVoiceRecognition') as bool;
+      final token = await _getAuthToken();
+      return await _channel.invokeMethod('startVoiceRecognition', {'authToken': token}) as bool;
     } catch (e) {
       Log.e('[NativeEmergency] startVoiceRecognition error: $e');
       return false;
@@ -159,7 +172,8 @@ class NativeEmergencyService {
   /// Activate voice SOS via long-press (starts foreground service)
   Future<bool> activateLongPressSOS() async {
     try {
-      return await _channel.invokeMethod('activateLongPressSOS') as bool;
+      final token = await _getAuthToken();
+      return await _channel.invokeMethod('activateLongPressSOS', {'authToken': token}) as bool;
     } catch (e) {
       Log.e('[NativeEmergency] activateLongPressSOS error: $e');
       return false;

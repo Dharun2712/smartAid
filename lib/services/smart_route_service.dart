@@ -56,6 +56,7 @@ class RouteStep {
 /// Result of the optimal route selection
 class OptimalRouteResult {
   final RouteOption selectedRoute;
+  final List<RouteOption> allRoutes;
   final int alternativesEvaluated;
   final String reason;
   final double straightLineKm;
@@ -64,6 +65,7 @@ class OptimalRouteResult {
 
   OptimalRouteResult({
     required this.selectedRoute,
+    required this.allRoutes,
     required this.alternativesEvaluated,
     required this.reason,
     required this.straightLineKm,
@@ -150,6 +152,7 @@ class SmartRouteService {
 
     return OptimalRouteResult(
       selectedRoute: best,
+      allRoutes: routes,
       alternativesEvaluated: routes.length,
       reason: reason,
       straightLineKm: straightLineKm,

@@ -20,7 +20,8 @@ class SocketService {
       return;
     }
 
-    Log.i('[SocketService] Connecting to $baseUrl as $role...');\n    
+    Log.i('[SocketService] Connecting to $baseUrl as $role...');
+
     _socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket', 'polling'],
       'autoConnect': true,
@@ -30,10 +31,13 @@ class SocketService {
     _socket!.onConnect((_) {
       Log.i('[SocketService] ✅ Connected to server');
       _isConnected = true;
-      
-      // Join role-specific room\n      final roleRoom = '${role}s'; // 'drivers', 'clients', 'admins'
+
+      // Join role-specific room
+      final roleRoom = '${role}s'; // 'drivers', 'clients', 'admins'
       _socket!.emit('join', {'room': roleRoom});
-      Log.i('[SocketService] Joined room: $roleRoom');\n      \n      // Join personal room
+      Log.i('[SocketService] Joined room: $roleRoom');
+
+      // Join personal room
       _socket!.emit('join', {'room': userId});
       Log.i('[SocketService] Joined personal room: $userId');
     });
@@ -46,7 +50,12 @@ class SocketService {
     _socket!.onConnectError((data) {
       Log.w('[SocketService] ❌ Connection error: $data');
       _isConnected = false;
-    });\n    \n    _socket!.onError((error) {\n      Log.w('[SocketService] ❌ Socket error: $error');\n    });\n  }
+    });
+
+    _socket!.onError((error) {
+      Log.w('[SocketService] ❌ Socket error: $error');
+    });
+  }
 
   /// Listen to new SOS requests (for drivers)
   void onNewSOSRequest(Function(Map<String, dynamic>) callback) {

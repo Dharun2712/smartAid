@@ -25,7 +25,7 @@ const char* WIFI_SSID = "A";
 const char* WIFI_PASS = "0808@123";
 
 // ================= CLOUD =================
-const char* SERVER_URL = "http://10.216.65.206:8000/api/accident";
+const char* SERVER_URL = "http://20.47.72.43:8000/api/accident";
 const char* DEVICE_KEY = "smartaid-prototype";
 
 // ================= GPS (STATIC LOCATION) =================

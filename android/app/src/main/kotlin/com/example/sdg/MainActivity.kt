@@ -58,6 +58,7 @@ class MainActivity : FlutterActivity() {
                     result.success(true)
                 }
                 "startFloatingButton" -> {
+                    storeAuthTokenForNative(call)
                     startFloatingButton(result)
                 }
                 "stopFloatingButton" -> {
@@ -67,6 +68,7 @@ class MainActivity : FlutterActivity() {
                     result.success(FloatingSOSService.isRunning)
                 }
                 "startVoiceRecognition" -> {
+                    storeAuthTokenForNative(call)
                     startVoiceRecognition(result)
                 }
                 "stopVoiceRecognition" -> {
@@ -76,6 +78,7 @@ class MainActivity : FlutterActivity() {
                     result.success(VoiceRecognitionService.isRunning)
                 }
                 "activateLongPressSOS" -> {
+                    storeAuthTokenForNative(call)
                     activateLongPressSOS(result)
                 }
                 else -> {
@@ -176,6 +179,18 @@ class MainActivity : FlutterActivity() {
     }
 
     // === Floating SOS Button ===
+
+    /** Save auth token to regular SharedPreferences so native services can read it */
+    private fun storeAuthTokenForNative(call: io.flutter.plugin.common.MethodCall) {
+        val token = call.argument<String>("authToken")
+        if (token != null) {
+            getSharedPreferences("smartaid_native", MODE_PRIVATE)
+                .edit()
+                .putString("auth_token", token)
+                .apply()
+            Log.d(TAG, "Auth token stored for native services")
+        }
+    }
 
     private fun startFloatingButton(result: MethodChannel.Result) {
         if (!hasOverlayPermission()) {
