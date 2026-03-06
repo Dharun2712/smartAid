@@ -238,7 +238,7 @@ class VoiceEmergencyService {
     final wakeDetected = _detectWakePhrase(text);
 
     if (wakeDetected) {
-      Log.d('[VoiceEmergency] Wake word detected in: "$text"');
+      Log.d('[VoiceEmergency] Wake word detected');
       _consecutiveErrors = 0;
       _setStatus(VoiceEmergencyStatus.wakeWordDetected);
 
@@ -260,7 +260,7 @@ class VoiceEmergencyService {
     // Also check for direct emergency keywords without a wake phrase
     // (e.g., user just yells "Help! Accident!")
     if (result.finalResult && _isUrgentEmergencyPhrase(text)) {
-      Log.d('[VoiceEmergency] Direct emergency detected: "$text"');
+      Log.d('[VoiceEmergency] Direct emergency detected');
       _speech.stop().then((_) {
         _processCommand(text, wakeWordDetected: false);
       });
@@ -346,7 +346,7 @@ class VoiceEmergencyService {
       action: action,
     );
 
-    Log.d('[VoiceEmergency] Command result: ${result.toJson()}');
+    Log.d('[VoiceEmergency] Command result: {wakeWordDetected: ${result.wakeWordDetected}, intent: ${result.intent}, action: ${result.action}}');
 
     if (intent == VoiceIntent.emergencyRequest) {
       _triggerEmergencyResponse(result);
@@ -381,7 +381,7 @@ class VoiceEmergencyService {
   /// Trigger the full emergency response workflow
   Future<void> _triggerEmergencyResponse(VoiceCommandResult result) async {
     _setStatus(VoiceEmergencyStatus.triggeringEmergency);
-    Log.d('[VoiceEmergency] Triggering emergency for: "${result.transcribedText}"');
+    Log.d('[VoiceEmergency] Triggering emergency response (wakeWordDetected=${result.wakeWordDetected}, intent=${result.intent})');
 
     // 1. Get current GPS location
     final position = await _locationService.getCurrentLocation();
@@ -467,7 +467,7 @@ class VoiceEmergencyService {
 
   /// Clean up resources
   void dispose() {
-    stopListening();
+    unawaited(stopListening());
     _speech.cancel();
   }
 

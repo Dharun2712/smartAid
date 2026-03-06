@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/services.dart';
 import '../utils/logger.dart';
 
@@ -163,6 +162,17 @@ class NativeEmergencyService {
     } catch (e) {
       Log.e('[NativeEmergency] activateLongPressSOS error: $e');
       return false;
+    }
+  }
+
+  // === Auth Token ===
+
+  /// Pass the current auth token to native so emergency alerts can be authenticated.
+  Future<void> setAuthToken(String token) async {
+    try {
+      await _channel.invokeMethod('setAuthToken', token);
+    } catch (e) {
+      Log.e('[NativeEmergency] setAuthToken error: $e');
     }
   }
 }
