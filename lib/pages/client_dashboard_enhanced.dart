@@ -9,6 +9,8 @@ import '../services/notification_service.dart';
 import '../models/hospital_data.dart';
 import '../widgets/hospital_list_card.dart';
 import '../widgets/voice_emergency_widget.dart';
+import 'emergency_voice_activation_page.dart';
+import '../services/native_emergency_service.dart';
 import 'sos_confirmation_modal.dart';
 import '../config/api_config.dart';
 import 'sos_active_screen.dart';
@@ -33,6 +35,8 @@ class _ClientDashboardEnhancedState extends State<ClientDashboardEnhanced> {
   final _socketService = SocketService();
   final _accidentDetector = AccidentDetectorService();
   final _notificationService = NotificationService();
+  final _nativeEmergency = NativeEmergencyService();
+
   GoogleMapController? _mapController;
   Position? _currentPosition;
   bool _autoSOSEnabled = false;
@@ -58,6 +62,7 @@ class _ClientDashboardEnhancedState extends State<ClientDashboardEnhanced> {
 
   Future<void> _initDashboard() async {
     _userName = await _authService.getUserId();
+    _nativeEmergency.initialize();
     await _notificationService.initialize();
     await _loadHistoryClearTimestamp();
     await _getCurrentLocation();
@@ -941,6 +946,29 @@ class _ClientDashboardEnhancedState extends State<ClientDashboardEnhanced> {
             label: const Text('AI IMAGE ANALYSIS'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepPurple,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+
+          // Native Voice Activation System
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const EmergencyVoiceActivationPage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.surround_sound, size: 22),
+            label: const Text('VOICE ACTIVATION SYSTEM'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red.shade800,
               foregroundColor: Colors.white,
               minimumSize: const Size(double.infinity, 50),
               shape: RoundedRectangleBorder(
