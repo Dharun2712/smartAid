@@ -7,6 +7,7 @@ import '../services/sos_service.dart';
 import '../services/socket_service.dart';
 import '../services/emergency_alert_service.dart';
 import '../services/directions_service.dart';
+import '../services/smart_route_service.dart';
 import '../models/injury_types.dart';
 import '../models/hospital_data.dart';
 import '../widgets/hospital_list_card.dart';
@@ -15,6 +16,7 @@ import 'driver_profile_page.dart';
 import 'patient_profile_dialog.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
+import 'package:url_launcher/url_launcher.dart';
 
 class DriverDashboardEnhanced extends StatefulWidget {
   const DriverDashboardEnhanced({Key? key}) : super(key: key);
@@ -30,6 +32,7 @@ class _DriverDashboardEnhancedState extends State<DriverDashboardEnhanced> {
   final _socketService = SocketService();
   final _emergencyAlert = EmergencyAlertService();
   final _directionsService = DirectionsService();
+  final _smartRouteService = SmartRouteService();
 
   GoogleMapController? _mapController;
   Position? _currentPosition;
@@ -43,6 +46,8 @@ class _DriverDashboardEnhancedState extends State<DriverDashboardEnhanced> {
   final Set<Polyline> _polylines = {};
   double? _distanceToClient;
   String? _etaToClient;
+  OptimalRouteResult? _currentRouteResult;
+  bool _isCalculatingRoute = false;
   
   // Static risk level selection state
   String _selectedStaticRisk = 'medium';
@@ -220,19 +225,23 @@ class _DriverDashboardEnhancedState extends State<DriverDashboardEnhanced> {
             _drawRouteToPatientAndHospital(LatLng(lat, lon));
           }
 
-          // Calculate distance to client
+          // Calculate distance — use smart route data if available, else haversine fallback
           if (_currentPosition != null) {
-            final distance = _locationService.calculateDistance(
-              _currentPosition!.latitude,
-              _currentPosition!.longitude,
-              lat,
-              lon,
-            );
-            // update distance and ETA without nesting setState calls
-            _distanceToClient = distance;
-            final hours = (distance / 1000) / 40;
-            final minutes = (hours * 60).ceil();
-            _etaToClient = ' $minutes min'.replaceFirst('\u0000', '');
+            if (_currentRouteResult != null) {
+              _distanceToClient = _currentRouteResult!.selectedRoute.distanceKm * 1000;
+              _etaToClient = '${_currentRouteResult!.selectedRoute.estimatedTimeMinutes.ceil()} min';
+            } else {
+              final distance = _locationService.calculateDistance(
+                _currentPosition!.latitude,
+                _currentPosition!.longitude,
+                lat,
+                lon,
+              );
+              _distanceToClient = distance;
+              final hours = (distance / 1000) / 40;
+              final minutes = (hours * 60).ceil();
+              _etaToClient = '$minutes min';
+            }
           }
         }
       } catch (e) {
@@ -1063,15 +1072,33 @@ class _DriverDashboardEnhancedState extends State<DriverDashboardEnhanced> {
             const SizedBox(height: 8),
             Text('Distance: ${(distance / 1000).toStringAsFixed(2)} km'),
             Text('ETA: $eta'),
+            if (_currentRouteResult != null) ...[  
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  Icon(Icons.route, size: 14, color: Colors.blue.shade700),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      'AI Route: ${_currentRouteResult!.selectedRoute.summary} '
+                      '(${_currentRouteResult!.alternativesEvaluated} routes evaluated)',
+                      style: TextStyle(fontSize: 11, color: Colors.blue.shade700),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            if (_isCalculatingRoute)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 6),
+                child: LinearProgressIndicator(),
+              ),
             const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () {
-                      _showSnackBar('Navigate to patient location');
-                      // TODO: Open navigation app
-                    },
+                    onPressed: () => _navigateToPatient(),
                     icon: const Icon(Icons.navigation),
                     label: const Text('Navigate'),
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
@@ -1276,7 +1303,39 @@ class _DriverDashboardEnhancedState extends State<DriverDashboardEnhanced> {
     }
   }
 
-  /// Draw route from ambulance to patient and then to hospital using Directions API
+  /// Launch Google Maps navigation to the patient location
+  Future<void> _navigateToPatient() async {
+    if (_currentAssignment == null) return;
+
+    final location = _currentAssignment!['location']['coordinates'];
+    final patientLat = (location[1] as num).toDouble();
+    final patientLng = (location[0] as num).toDouble();
+
+    // Try Google Maps navigation intent first
+    final googleMapsUrl = Uri.parse(
+        'google.navigation:q=$patientLat,$patientLng&mode=d');
+    final webFallbackUrl = Uri.parse(
+        'https://www.google.com/maps/dir/?api=1&destination=$patientLat,$patientLng&travelmode=driving');
+
+    try {
+      if (await canLaunchUrl(googleMapsUrl)) {
+        await launchUrl(googleMapsUrl);
+      } else if (await canLaunchUrl(webFallbackUrl)) {
+        await launchUrl(webFallbackUrl, mode: LaunchMode.externalApplication);
+      } else {
+        _showSnackBar('Could not open navigation app');
+      }
+    } catch (e) {
+      // Fallback to web URL
+      try {
+        await launchUrl(webFallbackUrl, mode: LaunchMode.externalApplication);
+      } catch (_) {
+        _showSnackBar('Navigation unavailable');
+      }
+    }
+  }
+
+  /// Draw route from ambulance to patient and then to hospital using Smart Route AI
   Future<void> _drawRouteToPatientAndHospital(LatLng patientLocation) async {
     if (_currentPosition == null) return;
 
@@ -1296,21 +1355,65 @@ class _DriverDashboardEnhancedState extends State<DriverDashboardEnhanced> {
       }
     }
 
-    // Draw route from ambulance to patient (blue line)
-    final routeToPatient = await _directionsService.getRoutePolyline(
-      origin: ambulanceLocation,
-      destination: patientLocation,
-    );
+    // Use Smart Route Service for optimal ambulance-to-patient route
+    setState(() { _isCalculatingRoute = true; });
 
-    if (mounted) {
-      setState(() {
-        _polylines.add(Polyline(
-          polylineId: const PolylineId('route_to_patient'),
-          points: routeToPatient,
-          color: Colors.blue,
-          width: 5,
-        ));
-      });
+    try {
+      final routeResult = await _smartRouteService.getOptimalRoute(
+        ambulanceLocation: ambulanceLocation,
+        accidentLocation: patientLocation,
+      );
+
+      if (mounted) {
+        setState(() {
+          _currentRouteResult = routeResult;
+          _isCalculatingRoute = false;
+
+          // Draw the AI-selected optimal route (blue line)
+          _polylines.add(Polyline(
+            polylineId: const PolylineId('route_to_patient'),
+            points: routeResult.selectedRoute.polylinePoints,
+            color: Colors.blue,
+            width: 6,
+          ));
+
+          // Draw alternative routes as thin grey lines for comparison
+          for (int i = 0; i < routeResult.allRoutes.length; i++) {
+            final route = routeResult.allRoutes[i];
+            if (route.summary != routeResult.selectedRoute.summary) {
+              _polylines.add(Polyline(
+                polylineId: PolylineId('alt_route_$i'),
+                points: route.polylinePoints,
+                color: Colors.grey.withOpacity(0.5),
+                width: 3,
+                patterns: [PatternItem.dash(10), PatternItem.gap(8)],
+              ));
+            }
+          }
+        });
+      }
+    } catch (e) {
+      // Fallback to basic directions service if smart routing fails
+      debugPrint('Smart routing failed, falling back to basic: $e');
+      if (mounted) {
+        setState(() { _isCalculatingRoute = false; });
+      }
+      
+      final routeToPatient = await _directionsService.getRoutePolyline(
+        origin: ambulanceLocation,
+        destination: patientLocation,
+      );
+
+      if (mounted) {
+        setState(() {
+          _polylines.add(Polyline(
+            polylineId: const PolylineId('route_to_patient'),
+            points: routeToPatient,
+            color: Colors.blue,
+            width: 5,
+          ));
+        });
+      }
     }
 
     // Draw route from patient to hospital (green dashed line) if hospital location available

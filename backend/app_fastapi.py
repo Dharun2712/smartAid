@@ -140,6 +140,14 @@ try:
 except Exception as e:
     logger.warning(f"⚠️  Accident Image Analysis API not loaded: {e}")
 
+# Import and include Ambulance Routing Router
+try:
+    from routing_api import routing_router
+    app.include_router(routing_router)
+    logger.info("✅ Ambulance Routing API loaded successfully")
+except Exception as e:
+    logger.warning(f"⚠️  Ambulance Routing API not loaded: {e}")
+
 # Request Logging Middleware
 @app.middleware("http")
 async def log_requests(request: Request, call_next):

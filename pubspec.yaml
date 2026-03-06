@@ -29,7 +29,8 @@ dependencies:
   vibration: ^2.0.0
   flutter_polyline_points: ^2.0.0
   image_picker: ^1.0.7
-  # speech_to_text: ^6.1.1  # Temporarily disabled due to build issues
+  url_launcher: ^6.2.5
+  speech_to_text: ^7.0.0
 
 dev_dependencies:
   flutter_test:
