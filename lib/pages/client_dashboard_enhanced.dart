@@ -8,7 +8,7 @@ import '../services/accident_detector_service.dart';
 import '../services/notification_service.dart';
 import '../models/hospital_data.dart';
 import '../widgets/hospital_list_card.dart';
-// import '../services/voice_recognition_service.dart';  // Temporarily disabled
+import '../widgets/voice_emergency_widget.dart';
 import 'sos_confirmation_modal.dart';
 import '../config/api_config.dart';
 import 'sos_active_screen.dart';
@@ -33,8 +33,6 @@ class _ClientDashboardEnhancedState extends State<ClientDashboardEnhanced> {
   final _socketService = SocketService();
   final _accidentDetector = AccidentDetectorService();
   final _notificationService = NotificationService();
-  // final _voiceService = VoiceRecognitionService();  // Temporarily disabled
-
   GoogleMapController? _mapController;
   Position? _currentPosition;
   bool _autoSOSEnabled = false;
@@ -52,9 +50,6 @@ class _ClientDashboardEnhancedState extends State<ClientDashboardEnhanced> {
   double? _distanceToDriver;
   Timer? _locationUpdateTimer;
   String? _activeRequestId;
-  // bool _voiceListening = false;  // Temporarily disabled
-  // String _voiceStatus = 'Say "emergency" or "help" to trigger SOS';  // Temporarily disabled
-
   @override
   void initState() {
     super.initState();
@@ -920,47 +915,16 @@ class _ClientDashboardEnhancedState extends State<ClientDashboardEnhanced> {
 
           const SizedBox(height: 16),
 
-          // Voice Control Button (temporarily disabled)
-          /* ElevatedButton.icon(
-            onPressed: _sosActive ? null : _toggleVoiceControl,
-            icon: Icon(_voiceListening ? Icons.mic : Icons.mic_none),
-            label: Text(_voiceListening ? 'LISTENING...' : 'VOICE CONTROL'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _voiceListening ? Colors.orange : Colors.blue,
-              foregroundColor: Colors.white,
-              minimumSize: const Size(double.infinity, 50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+          // Voice Emergency Assistant
+          VoiceEmergencyWidget(
+            onSOSTriggered: () {
+              if (mounted) {
+                setState(() => _sosActive = true);
+                _loadRequestHistory();
+                _showSnackBar('Voice SOS sent! Searching for nearest ambulance...', backgroundColor: Colors.red);
+              }
+            },
           ),
-          
-          if (_voiceListening)
-            Container(
-              margin: const EdgeInsets.only(top: 8),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.orange.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.orange.shade200),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.hearing, color: Colors.orange.shade700, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      _voiceStatus,
-                      style: TextStyle(
-                        color: Colors.orange.shade900,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ), */
 
           // AI Accident Image Analysis Button
           const SizedBox(height: 12),
